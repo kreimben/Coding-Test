@@ -2,38 +2,33 @@
 https://leetcode.com/problems/binary-tree-maximum-path-sum/
 Binary Tree Maximum Path Sum
 """
-from idlelib.tree import TreeNode
 from typing import Optional
 
 
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
 class Solution:
-    def max_path_sum(self, root: Optional[TreeNode]) -> int:
-        max_path = -float('inf')
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        arr = []
 
-        # post order traversal of subtree rooted at `node`
-        def gain_from_subtree(node: Optional[TreeNode]) -> int:
-            nonlocal max_path
+        def count(node: TreeNode) -> int:
+            nonlocal arr
 
-            if not node:
+            if node is None:
                 return 0
 
-            # add the gain from the left subtree. Note that if the
-            # gain is negative, we can ignore it, or count it as 0.
-            # This is the reason we use `max` here.
-            gain_from_left = max(gain_from_subtree(node.left), 0)
+            left = count(node.left) + (node.left.val if node.left else 0)
+            right = count(node.right) + (node.right.val if node.right else 0)
 
-            # add the gain / path sum from right subtree. 0 if negative
-            gain_from_right = max(gain_from_subtree(node.right), 0)
+            arr.append(max(left + right + node.val, left + node.val, right + node.val, node.val))
+            return max(left, right, 0)
 
-            # if left or right gain are negative, they are counted
-            # as 0, so this statement takes care of all four scenarios
-            max_path = max(max_path, gain_from_left + gain_from_right + node.val)
+        count(root)
 
-            # return the max sum for a path starting at the root of subtree
-            return max(
-                gain_from_left + node.val,
-                gain_from_right + node.val
-            )
-
-        gain_from_subtree(root)
-        return max_path
+        return max(arr)
