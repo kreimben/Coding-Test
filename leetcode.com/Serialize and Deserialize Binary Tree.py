@@ -4,6 +4,13 @@ Serialize and Deserialize Binary Tree
 """
 
 
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.left = left
+        self.right = right
+        self.val = val
+
+
 class Codec:
 
     # Serialization
