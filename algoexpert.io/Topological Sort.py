@@ -5,12 +5,38 @@ https://www.algoexpert.io/questions/topological-sort
 from collections import defaultdict
 
 
+def detect_cycle(graph):
+    visited = set()
+    stack = []
+
+    for vertex in graph.keys():
+        if vertex not in visited:
+            visited.add(vertex)
+            stack.append(vertex)
+
+            while stack:
+                v = stack.pop()
+
+                for neighbor in graph[v]:
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        stack.append(neighbor)
+                    else:
+                        return True
+
+    return False
+
+
 def topologicalSort(jobs, deps):
     graph = defaultdict(list)
 
     # loop first and make graph.
     for dep, tar in deps:
         graph[dep].append(tar)
+
+    # if not listed in deps, just loop. (defaultdict)
+    for job in jobs:
+        graph[job]
 
     # sort `jobs` according to graph.
     visited = set()
@@ -30,7 +56,7 @@ def topologicalSort(jobs, deps):
             visited.add(key)
             dfs(key)
 
-    return jobs[::-1] if not graph else []
+    return jobs[::-1]
 
 
 # def topologicalSort(jobs, deps):
@@ -74,3 +100,17 @@ def topologicalSort(jobs, deps):
 
 assert topologicalSort([1, 2, 3, 4, 5], [[1, 4], [5, 2]]) == [5, 2, 3, 1, 4]
 assert topologicalSort([1, 2, 3, 4], [[1, 2], [1, 3], [3, 2], [4, 2], [4, 3]]) == [1, 4, 3, 2]
+assert topologicalSort([1, 2, 3, 4, 5, 6, 7, 8], [
+    [3, 1],
+    [8, 1],
+    [8, 7],
+    [5, 7],
+    [5, 2],
+    [1, 4],
+    [1, 6],
+    [1, 2],
+    [7, 6],
+    [4, 6],
+    [6, 2],
+    [2, 3]
+]) == []
