@@ -2,6 +2,8 @@
 https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
 Best Time to Buy and Sell Stock
 """
+import math
+from typing import List
 
 
 class Solution:
@@ -17,6 +19,20 @@ class Solution:
             sell += 1
 
         return max_profit
+
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        low = math.inf
+        profit = 0
+
+        for price in prices:
+            if profit < price - low:
+                profit = price - low
+            if price < low:
+                low = price
+
+        return profit
 
 
 s = Solution()
