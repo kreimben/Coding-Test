@@ -2,6 +2,7 @@
 https://leetcode.com/problems/linked-list-cycle/description/
 Linked List Cycle
 """
+from collections import defaultdict
 from typing import Optional
 
 
@@ -14,14 +15,22 @@ class ListNode:
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
-        # All I need to do is just check that next is duplicated.
-        d = {}
+        d = defaultdict(int)
         curr = head
-        d[curr] = True
-        while curr:
-            if d.get(curr.next, False):
-                # Duplicated!
-                return True
-            d[curr.next] = True
+        while curr and d[curr] < 2:
+            d[curr] += 1
             curr = curr.next
-        return False
+        return d[curr] >= 2
+
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        LIMIT = 10 ** 4 + 1
+
+        count = 0
+        curr = head
+        while curr and count < LIMIT:
+            count += 1
+            curr = curr.next
+
+        return count == LIMIT
