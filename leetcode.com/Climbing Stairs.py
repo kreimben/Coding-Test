@@ -2,6 +2,7 @@
 https://leetcode.com/problems/climbing-stairs/
 Climbing Stairs
 """
+from functools import lru_cache
 
 
 class Solution:
@@ -10,6 +11,17 @@ class Solution:
         for i in range(2, n + 1):  # 1 ~ n
             dp[i] = dp[i - 1] + dp[i - 2]
         return dp[len(dp) - 1]
+
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        @lru_cache(maxsize=None)
+        def dp(step: int) -> int:
+            if step < 3:
+                return step
+            return dp(step - 1) + dp(step - 2)
+
+        return dp(n)
 
 
 s = Solution()
