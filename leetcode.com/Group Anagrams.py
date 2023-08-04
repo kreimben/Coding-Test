@@ -3,10 +3,11 @@ https://leetcode.com/problems/group-anagrams/
 Group Anagrams
 """
 from collections import defaultdict
+from typing import List
 
 
 class Solution:
-    def groupAnagrams(self, strs: [str]) -> [[str]]:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         results = defaultdict(list)
         for s in strs:
             count = [0] * 26
@@ -14,6 +15,14 @@ class Solution:
                 count[ord(c) - ord('a')] += 1
             results[tuple(count)].append(s)
         return results.values()
+
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        res = defaultdict(list)
+        for s in strs:
+            res[''.join(sorted(s))].append(s)
+        return res.values()
 
 
 s = Solution()
