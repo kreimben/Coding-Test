@@ -2,6 +2,35 @@
 https://leetcode.com/problems/3sum/
 3Sum
 """
+from typing import List
+
+
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        # index is not required as results.
+        nums.sort()  # nums=[-4, -1, -1, 0, 1, 2]
+        res = set()
+
+        for left in range(len(nums) - 2):
+            right = len(nums) - 1
+            mid = left + 1
+
+            while mid < right:
+                total_set = (nums[left], nums[mid], nums[right])
+                total = sum(total_set)
+
+                if total == 0:
+                    res.add(total_set)
+                    mid += 1;
+                    right -= 1
+                    while mid < right and nums[mid] == nums[mid - 1]:
+                        mid += 1
+                elif total < 0:
+                    mid += 1
+                else:
+                    right -= 1
+
+        return list(res)
 
 
 class Solution:
