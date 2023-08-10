@@ -15,24 +15,19 @@ class TreeNode:
 
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        result = []
+        res = []
 
-        def count(node, level):
-            nonlocal result
-            if node is None:
-                return
+        def write(node, level):
+            nonlocal res
+            if node is None: return
+            if len(res) < level + 1:
+                res.append([])
 
-            if len(result) > level:
-                if result[level]:
-                    result[level].append(node.val)
-                else:
-                    result[level] = [node.val]
-            else:
-                result.append([node.val])
+            res[level].append(node.val)
 
-            count(node.left, level + 1)
-            count(node.right, level + 1)
+            write(node.left, level + 1)
+            write(node.right, level + 1)
 
-        count(root, 0)
+        write(root, 0)
 
-        return result
+        return res
