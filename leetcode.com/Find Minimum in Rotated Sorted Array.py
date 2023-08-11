@@ -2,6 +2,7 @@
 https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
 Find Minimum in Rotated Sorted Array
 """
+from typing import List
 
 
 class Solution:
@@ -19,6 +20,21 @@ class Solution:
                 right = mid - 1
 
         return min(curr_min, nums[left])
+
+
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            if nums[left] <= nums[right]:
+                # it's neutral.
+                if left == 0 or nums[left - 1] > nums[left]:
+                    return nums[left]
+                else:
+                    left -= 1
+            else:
+                # if it's rotated and not neutral.
+                left = (left + right) // 2 + 1
 
 
 s = Solution()
