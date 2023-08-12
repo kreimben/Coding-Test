@@ -23,3 +23,19 @@ class Solution:
                 return False
 
         return True
+
+
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        s_keys = set(list(s))  # a, n, g, r, m
+        t_keys = set(list(t))  # n, a, g, r, m
+
+        if s_keys != t_keys:
+            return False
+
+        # compare
+        for key in s_keys:
+            if s.count(key) != t.count(key):
+                return False
+
+        return True
