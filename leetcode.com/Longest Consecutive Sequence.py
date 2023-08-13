@@ -2,6 +2,7 @@
 https://leetcode.com/problems/longest-consecutive-sequence/
 Longest Consecutive Sequence
 """
+from typing import List
 
 
 class Solution:
@@ -21,6 +22,35 @@ class Solution:
                 if length > longest:
                     longest = length
         return longest
+
+
+from collections import defaultdict
+
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        if len(nums) < 2:
+            return len(nums)  # 0 or 1
+
+        nums = sorted(list(set(nums)))
+
+        chart = defaultdict(int)
+        for num in nums:
+            chart[num] += 1
+
+        combo = 1
+        maxval = 0
+        key = 0
+
+        while key <= len(nums) - 1:
+            if chart[nums[key]] and chart[nums[key] + 1]:  # much faster than using string as key.
+                combo += 1
+            else:
+                maxval = max(maxval, combo)
+                combo = 1
+            key += 1
+
+        return max(maxval, combo)
 
 
 s = Solution()
