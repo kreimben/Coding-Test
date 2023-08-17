@@ -2,6 +2,7 @@
 https://leetcode.com/problems/two-sum/
 Two Sum
 """
+from typing import List
 
 
 class Solution:
@@ -16,6 +17,13 @@ class Solution:
                 wanted_index = nums.index(wanted)
                 if target_index != wanted_index:
                     return sorted([target_index, wanted_index])
+
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        for i, num in enumerate(nums):
+            if target - num in nums and (index := nums.index(target - num)) != i:
+                return sorted([i, index])
 
 
 s = Solution()
