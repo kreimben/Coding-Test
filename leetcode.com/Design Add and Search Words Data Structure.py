@@ -25,46 +25,71 @@ from unittest import TestCase
 #             if i == m:
 #                 return True
 #         return False
+# class WordDictionary:
+#
+#     def __init__(self):
+#         """
+#         Initialize your data structure here.
+#         """
+#         self.trie = {}
+#
+#     def addWord(self, word: str) -> None:
+#         """
+#         Adds a word into the data structure.
+#         """
+#         node = self.trie
+#
+#         for ch in word:
+#             if not ch in node:
+#                 node[ch] = {}
+#             node = node[ch]
+#         node['$'] = True
+#
+#     def search(self, word: str) -> bool:
+#         def search_in_node(word, node) -> bool:
+#             for i, ch in enumerate(word):
+#                 if not ch in node:
+#                     # if the current character is '.'
+#                     # check all possible nodes at this level
+#                     if ch == '.':
+#                         for x in node:
+#                             if x != '$' and search_in_node(word[i + 1:], node[x]):
+#                                 return True
+#                     # if no nodes lead to answer
+#                     # or the current character != '.'
+#                     return False
+#                 # if the character is found
+#                 # go down to the next level in trie
+#                 else:
+#                     node = node[ch]
+#             return '$' in node
+#
+#         return search_in_node(word, self.trie)
 class WordDictionary:
 
     def __init__(self):
-        """
-        Initialize your data structure here.
-        """
-        self.trie = {}
+        self.d = {}
 
     def addWord(self, word: str) -> None:
-        """
-        Adds a word into the data structure.
-        """
-        node = self.trie
-
+        curr = self.d
         for ch in word:
-            if not ch in node:
-                node[ch] = {}
-            node = node[ch]
-        node['$'] = True
+            if not curr.get(ch):
+                curr[ch] = {}
+            curr = curr[ch]
+        curr.update({'*': True})
 
     def search(self, word: str) -> bool:
-        def search_in_node(word, node) -> bool:
-            for i, ch in enumerate(word):
-                if not ch in node:
-                    # if the current character is '.'
-                    # check all possible nodes at this level
-                    if ch == '.':
-                        for x in node:
-                            if x != '$' and search_in_node(word[i + 1:], node[x]):
-                                return True
-                    # if no nodes lead to answer
-                    # or the current character != '.'
-                    return False
-                # if the character is found
-                # go down to the next level in trie
-                else:
-                    node = node[ch]
-            return '$' in node
-
-        return search_in_node(word, self.trie)
+        curr = self.d
+        for ch in word:
+            if ch != '.' and not curr.get(ch):
+                return False
+            elif ch == '.':
+                for k in curr:
+                    if k != '*' and self.search(word.replace('.', k, 1)): return True
+                return False
+            else:
+                curr = curr[ch]
+        return curr.get('*', False)
 
 
 class Case(TestCase):
@@ -77,9 +102,6 @@ class Case(TestCase):
 
         actual = self.run_with(commands, inputs)
         expected = [None, None, None, None, None, False, False, None, True, True, False, False, True, False]
-        # for command, i, a, e in list(zip(commands, inputs, actual, expected)):
-        #     if command == 'search' and a != e:
-        #         print(f'{command=} {i=} {a=} {e=}')
         self.assertEqual(actual, expected)
 
     def test2(self):
