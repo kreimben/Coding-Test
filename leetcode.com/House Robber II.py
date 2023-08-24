@@ -2,6 +2,27 @@
 https://leetcode.com/problems/house-robber-ii/
 House Robber II
 """
+from functools import lru_cache
+from typing import List
+
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if len(nums) < 3: return max(nums)
+
+        @lru_cache(maxsize=None)
+        def dp(i: int, limit: int) -> int:
+            if i >= limit: return 0
+            return max(
+                dp(i + 2, limit),
+                dp(i + 3, limit)
+            ) + nums[i]
+
+        return max(
+            dp(0, len(nums) - 1),
+            dp(1, len(nums)),
+            dp(2, len(nums))
+        )
 
 
 class Solution:
