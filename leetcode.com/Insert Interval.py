@@ -2,7 +2,60 @@
 https://leetcode.com/problems/insert-interval/
 Insert Interval
 """
+import math
 from typing import List
+
+
+class Solution:
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+
+        target = []
+        low, high = math.inf, -math.inf
+        for i, (start, end) in enumerate(intervals):
+            if start <= newInterval[0] <= end or \
+                    start <= newInterval[1] <= end or \
+                    newInterval[0] <= start and end <= newInterval[1]:
+                target.append(i)
+                low = min(low, start, newInterval[0])
+                high = max(high, end, newInterval[1])
+
+        if target:
+            while target:
+                # I have to remove original elements and merge it.
+                intervals.pop(target.pop())
+            intervals.append([low, high])
+
+        else:
+            intervals.append(newInterval)
+
+        return sorted(intervals)
+
+
+class Solution:
+    # Brute force
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        intervals.append(newInterval.copy())
+        intervals.sort()
+
+        while True:
+            # iterate over when not found any changes.
+            NOT_CHANGED = True
+            remove_target = []
+            for i in range(1, len(intervals)):
+                if i - 1 in remove_target: continue
+
+                prev, curr = intervals[i - 1], intervals[i]
+                if prev[1] >= curr[0] or prev[0] <= curr[0] and prev[1] >= curr[1]:
+                    intervals[i - 1][0] = min(prev[0], curr[0])
+                    intervals[i - 1][1] = max(prev[1], curr[1])
+                    remove_target.append(i)
+                    NOT_CHANGED = False
+
+            for index in remove_target:
+                intervals.pop(index)
+
+            if NOT_CHANGED: break
+        return intervals
 
 
 class Solution:
