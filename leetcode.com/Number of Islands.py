@@ -2,6 +2,44 @@
 https://leetcode.com/problems/number-of-islands/
 Number of Islands
 """
+from typing import List
+
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        # BFS
+        visited = set()
+        count = 0
+        case = (
+            (0, 1),
+            (0, -1),
+            (1, 0),
+            (-1, 0)
+        )
+
+        def bfs(i, j):
+            nonlocal count, case
+            q = [(i, j)]
+            while q:
+                curr = q.pop(0)
+                for di, dj in case:
+                    x, y = curr[0] + di, curr[1] + dj
+                    if (x, y) not in visited and \
+                            0 <= x < len(grid) and 0 <= y < len(grid[0]) and \
+                            grid[x][y] == '1':
+                        visited.add((x, y))
+                        q.append((x, y))
+            count += 1
+
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if (i, j) not in visited and grid[i][j] == '1':
+                    visited.add((i, j))
+                    bfs(i, j)
+
+        return count
+
+
 from collections import deque
 
 
