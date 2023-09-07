@@ -3,31 +3,26 @@ https://leetcode.com/problems/longest-substring-without-repeating-characters/
 Longest Substring Without Repeating Characters
 """
 
+from collections import defaultdict
+
 
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        left, right = 0, 1
-        d = {}
-        maximum = float('-inf')
+        curr = defaultdict(int)
+        maxval = 0
 
-        while right < len(s) + 1:
-            target = right - 1
-            if d.get(s[target]):
-                # left should be added 1.
-                maximum = max(maximum, right - left - 1)
-                left += 1
-                right += 1
-
+        start = 0
+        end = 0
+        while end < len(s):
+            if curr[s[end]] != 0:
+                curr[s[start]] -= 1
+                start += 1
             else:
-                # It's valid trial and right should be added 1.
-                right += 1
-                d[s[target]] = True
+                curr[s[end]] += 1
+                maxval = max(maxval, end - start + 1)
+                end += 1
 
-        if maximum == float('-inf') or len(d.values()) != 0:
-            temp = [value for value in d.values()]
-            maximum = max(maximum, sum(temp))
-
-        return maximum
+        return maxval
 
 
 s = Solution()
