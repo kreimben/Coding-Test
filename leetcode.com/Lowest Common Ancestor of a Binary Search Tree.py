@@ -12,6 +12,30 @@ Lowest Common Ancestor of a Binary Search Tree
 #         self.right = None
 
 class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        def find(node: 'TreeNode', p: int, q: int):
+            if node is None:
+                return None
+
+            if node.val == p or node.val == q:
+                return node
+
+            l = find(node.left, p, q)
+            r = find(node.right, p, q)
+
+            if l and r:
+                return node
+            elif l:
+                return l
+            elif r:
+                return r
+            else:
+                return None
+
+        return find(root, p.val, q.val)
+
+
+class Solution:
     def lowestCommonAncestor(self, root, p, q):
         def find_and_make_chain(node, target):
             chain = []
