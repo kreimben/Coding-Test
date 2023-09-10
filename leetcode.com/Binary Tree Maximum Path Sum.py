@@ -2,15 +2,37 @@
 https://leetcode.com/problems/binary-tree-maximum-path-sum/
 Binary Tree Maximum Path Sum
 """
+import math
 from typing import Optional
 
 
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+class Solution:
+    def maxPathSum(self, root: Optional['TreeNode']) -> int:
+        maxval = -math.inf
+
+        def traverse(tree: 'TreeNode') -> int:
+            nonlocal maxval
+            if tree.left and tree.right:
+                left = traverse(tree.left)
+                right = traverse(tree.right)
+                maxval = max(maxval, left + right + tree.val, left + tree.val, right + tree.val, left, right, tree.val)
+                return max(max(left, right) + tree.val, tree.val)
+            elif tree.left:
+                left = traverse(tree.left)
+                maxval = max(maxval, left + tree.val, left, tree.val)
+                return max(tree.val, left + tree.val)
+            elif tree.right:
+                right = traverse(tree.right)
+                maxval = max(maxval, right + tree.val, right, tree.val)
+                return max(tree.val, right + tree.val)
+            else:
+                maxval = max(maxval, tree.val)
+                return tree.val
+
+        res = traverse(root)
+        maxval = max(maxval, res)
+
+        return maxval
 
 
 class Solution:
