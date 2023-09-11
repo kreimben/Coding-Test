@@ -2,76 +2,55 @@
 Word Search II
 https://leetcode.com/problems/word-search-ii/
 """
-from typing import List
-
-
-class TrieNode:
-    def __init__(self):
-        self.children = {}
-        self.is_word = False
-        self.refs = 0
-
-    def add_word(self, word):
-        curr = self
-        curr.refs += 1
-        for c in word:
-            if c not in curr.children:
-                curr.children[c] = TrieNode()
-            curr = curr.children[c]
-            curr.refs += 1
-        curr.is_word = True
-
-    def remove_word(self, word):
-        cur = self
-        cur.refs -= 1
-        for c in word:
-            if c in cur.children:
-                cur = cur.children[c]
-                cur.refs -= 1
 
 
 class Solution:
-    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
-        root = TrieNode()
-        for w in words:
-            root.add_word(w)
+    def findWords(self, board, words):
+        # Set Trie
+        # The reason I use Trie is for searching word in any position.
+        # What if I search EACH word starting from scratch?
+        # That way will consume many times.
+        d = {}
 
-        ROWS, COLS = len(board), len(board[0])
-        res, visit = set(), set()
+        for word in words:
+            curr = d
+            for ch in word:
+                if curr.get(ch) is None:
+                    curr[ch] = {}
+                curr = curr[ch]
+            curr['*'] = word
 
-        def dfs(r, c, node, word):
-            if (
-                    r not in range(ROWS)
-                    or c not in range(COLS)
-                    or board[r][c] not in node.children
-                    or node.children[board[r][c]].refs < 1
-                    or (r, c) in visit
-            ):
-                return
+        def is_valid(i, j) -> bool:
+            return 0 <= i < len(board) and 0 <= j < len(board[0])
 
-            # backtracking!
-            visit.add((r, c))
+        res = []
 
-            node = node.children[board[r][c]]
-            word += board[r][c]
-            if node.is_word:
-                node.is_word = False
-                res.add(word)
-                root.remove_word(word)
+        def backtracking(x, y, parent):
+            nonlocal res
 
-            dfs(r + 1, c, node, word)
-            dfs(r - 1, c, node, word)
-            dfs(r, c + 1, node, word)
-            dfs(r, c - 1, node, word)
+            curr = parent[board[x][y]]
+            if word := curr.pop('*', False):
+                res.append(word)
 
-            # backtracking!
-            visit.remove((r, c))
+            letter = board[x][y]
+            board[x][y] = '#'  # mark it as "visited"
 
-        for r in range(ROWS):
-            for c in range(COLS):
-                dfs(r, c, root, "")
+            for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                i, j = x + dx, y + dy
 
-        return list(res)
+                if is_valid(i, j) and board[i][j] in curr.keys():
+                    backtracking(i, j, curr)
+
+            board[x][y] = letter  # recovery
+            if not curr: parent.pop(letter)
+
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] in d.keys():
+                    # go for it.
+                    backtracking(i, j, d)
+
+        return list(set(res))
 
 
 # class Solution:
@@ -117,8 +96,8 @@ class Solution:
 
 
 s = Solution()
-# assert s.findWords([["b"], ["a"], ["b"], ["b"], ["a"]], ["baa", "abba", "baab", "aba"]) == ["abba"]
-# assert s.findWords([["o", "a", "b", "n"], ["o", "t", "a", "e"], ["a", "h", "k", "r"], ["a", "f", "l", "v"]],
-#                    ["oa", "oaa"]) == ["oa", "oaa"]
+assert s.findWords([["b"], ["a"], ["b"], ["b"], ["a"]], ["baa", "abba", "baab", "aba"]) == ["abba"]
+assert s.findWords([["o", "a", "b", "n"], ["o", "t", "a", "e"], ["a", "h", "k", "r"], ["a", "f", "l", "v"]],
+                   ["oa", "oaa"]) == ["oa", "oaa"]
 assert s.findWords(board=[["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]],
                    words=["oath", "pea", "eat", "rain"]) == ["oath", "eat"]
