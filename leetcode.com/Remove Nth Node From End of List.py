@@ -11,12 +11,6 @@ class ListNode:
         self.val = val
         self.next = next
 
-    def __str__(self):
-        return f'{self.val} ({self.next})'
-
-    def __repr__(self):
-        return f'{self.val} ({self.next})'
-
 
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
@@ -36,10 +30,3 @@ class Solution:
         # And traverse until find left
         left.next = left.next.next
         return dummy.next
-
-
-s = Solution()
-assert s.removeNthFromEnd(ListNode(1, ListNode(2)), 2).val == ListNode(2).val
-assert s.removeNthFromEnd(ListNode(1), 1) == None
-assert s.removeNthFromEnd(ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5))))), 2) == \
-       ListNode(1, ListNode(2, ListNode(3, ListNode(5))))
