@@ -9,17 +9,17 @@ class Solution:
         count = 0
         for i in range(len(s)):
             # odd case
-            left, right = i, i
-            while -1 < left and right < len(s) and s[left] == s[right]:
+            l, r = i, i
+            while 0 <= l <= r < len(s) and s[l] == s[r]:
                 count += 1
-                left -= 1
-                right += 1
+                l -= 1
+                r += 1
 
             # even case
-            left, right = i, i + 1
-            while -1 < left and right < len(s) and s[left] == s[right]:
+            l, r = i, i + 1
+            while 0 <= l <= r < len(s) and s[l] == s[r]:
                 count += 1
-                left -= 1
-                right += 1
+                l -= 1
+                r += 1
 
         return count
