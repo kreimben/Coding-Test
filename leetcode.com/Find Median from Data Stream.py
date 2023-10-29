@@ -8,6 +8,23 @@ import heapq
 class MedianFinder:
 
     def __init__(self):
+        self.q = []
+
+    def addNum(self, num: int) -> None:
+        self.q.append(num)
+
+    def findMedian(self) -> float:
+        self.q.sort()
+        mid = len(self.q) // 2
+        if len(self.q) % 2 == 0:
+            return (self.q[mid - 1] + self.q[mid]) / 2
+        else:
+            return self.q[mid]
+
+
+class MedianFinder:
+
+    def __init__(self):
         self.left = []  # Max Heap for get median value
         self.right = []  # Min Heap for get median value
 
