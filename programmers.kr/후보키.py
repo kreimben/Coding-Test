@@ -1,6 +1,6 @@
 """
 https://school.programmers.co.kr/learn/courses/30/lessons/42890
-후보키 문제
+후보키
 """
 from functools import cmp_to_key
 
