@@ -5,6 +5,24 @@ https://school.programmers.co.kr/learn/courses/30/lessons/150369
 
 
 def solution(cap: int, n: int, deliveries: [int], pickups: [int]):
+    idps = [(i, d, p) for i, (d, p) in enumerate(zip(deliveries, pickups), 1) if d or p]
+    delivery = 0
+    pickup = 0
+    answer = 0
+
+    while idps:
+        i, d, p = idps.pop()
+        delivery += d
+        pickup += p
+        while delivery > 0 or pickup > 0:
+            delivery -= cap
+            pickup -= cap
+            answer += 2 * i
+
+    return answer
+
+
+def solution(cap: int, n: int, deliveries: [int], pickups: [int]):
     total = 0
 
     while True:
